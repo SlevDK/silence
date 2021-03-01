@@ -25,11 +25,11 @@ class XMLParser
     {
         $path = realpath($path_to_file);
         if (! $path) {
-            throw new InvalidArgumentException("File {$path_to_file} not found.");
+            throw new \InvalidArgumentException("File {$path_to_file} not found.");
         }
 
         if (! $this->xmlContent = simplexml_load_file($path)) {
-            throw new InvalidArgumentException("File {$path_to_file} not correct xml file.");
+            throw new \InvalidArgumentException("File {$path_to_file} not correct xml file.");
         }
 
         return $this;

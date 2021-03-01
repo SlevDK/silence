@@ -17,16 +17,23 @@ $file = $argv[1];
 $chapter_split = (int) $argv[2];
 $subchapter_split = (int) $argv[3];
 $max_segment_duration = (int) $argv[4];
+try {
 
-$parser = new XMLParser();
-$parser->load($file);
-$metadata = $parser->getMetadata();
+    $parser = new XMLParser();
+    $parser->load($file);
+    $metadata = $parser->getMetadata();
 
-$analyzer = new Analyzer($chapter_split, $subchapter_split, $max_segment_duration);
-$podcast = $analyzer->splitMetadata($metadata);
+    $analyzer = new Analyzer($chapter_split, $subchapter_split, $max_segment_duration);
+    $podcast = $analyzer->splitMetadata($metadata);
 
-//Exporter::exportToTheFile($podcast, "./test-output.txt");
-Exporter::exportToTheConsole($podcast, true);
+    //Exporter::exportToTheFile($podcast, "./test-output.txt");
+    Exporter::exportToTheConsole($podcast, true);
+
+} catch (\Exception $e) {
+    echo "\n";
+    echo $e->getMessage();
+    echo "\n";
+}
 
 
 
