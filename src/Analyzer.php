@@ -22,6 +22,10 @@ class Analyzer
         int $chapter_split_sec, int $subchapter_split_sec, int $max_segment_duration
     )
     {
+        if ($chapter_split_sec == 0 || $subchapter_split_sec == 0 || $max_segment_duration == 0) {
+            throw new InvalidArgumentException("Timings must be greater than 0");
+        }
+
         if ($subchapter_split_sec >= $chapter_split_sec) {
             throw new InvalidArgumentException(
                 'Chapter split sec must be greater that subchapter split sec'
