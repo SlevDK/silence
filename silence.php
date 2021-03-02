@@ -4,9 +4,7 @@ use App\Analyzer;
 use App\XMLParser;
 use App\Exporter;
 
-include 'src/Exporter.php';
-include 'src/Analyzer.php';
-include 'src/XMLParser.php';
+include 'autoloader.php';
 
 if (!isset($argv[1]) || $argv[1] == '-h' || $argv[1] == '--h') {
     printHelp();
