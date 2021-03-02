@@ -10,7 +10,7 @@ include 'src/XMLParser.php';
 
 if (!isset($argv[1]) || $argv[1] == '-h' || $argv[1] == '--h') {
     printHelp();
-    die();
+    die(0);
 }
 
 try {
@@ -33,7 +33,11 @@ try {
     );
     $podcast = $analyzer->splitMetadata($metadata);
 
-    //Exporter::exportToTheFile($podcast, "./test-output.txt");
+    if ($arguments['export_to'] !== '') {
+        Exporter::exportToTheFile($podcast, $arguments['export_to']);
+        die(0);
+    }
+
     Exporter::exportToTheConsole($podcast, true);
 
 } catch (\Exception $e) {
@@ -41,8 +45,6 @@ try {
     echo $e->getMessage();
     echo "\n";
 }
-
-
 
 function printHelp()
 {
@@ -84,7 +86,7 @@ function parseArguments($argv)
                 $arguments['segment_duration'] = $arg[1] ?? 0;
                 break;
             case '-export':
-                $arguments['export'] = $arg[1] ?? '';
+                $arguments['export_to'] = $arg[1] ?? '';
                 break;
             default:
                 throw new \InvalidArgumentException("Unrecognized option {$arg[0]}");
