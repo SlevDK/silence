@@ -8,22 +8,29 @@ include 'src/Exporter.php';
 include 'src/Analyzer.php';
 include 'src/XMLParser.php';
 
-if ($argv[1] == '-h' || $argv[1] == '--h') {
+if (!isset($argv[1]) || $argv[1] == '-h' || $argv[1] == '--h') {
     printHelp();
     die();
 }
 
-$file = $argv[1];
-$chapter_split = (int) $argv[2];
-$subchapter_split = (int) $argv[3];
-$max_segment_duration = (int) $argv[4];
+try {
+    $arguments = parseArguments($argv);
+} catch (\Exception $e) {
+    echo "\n";
+    echo $e->getMessage();
+    echo "\n";
+    die();
+}
+
 try {
 
     $parser = new XMLParser();
-    $parser->load($file);
+    $parser->load($arguments['file']);
     $metadata = $parser->getMetadata();
 
-    $analyzer = new Analyzer($chapter_split, $subchapter_split, $max_segment_duration);
+    $analyzer = new Analyzer(
+        $arguments['silence_chapter'], $arguments['silence_part'], $arguments['segment_duration']
+    );
     $podcast = $analyzer->splitMetadata($metadata);
 
     //Exporter::exportToTheFile($podcast, "./test-output.txt");
@@ -40,11 +47,49 @@ try {
 function printHelp()
 {
     print "Command line arguments:\n";
-    print " first argument - path to file (example silence.php some/file.xml);\n";
-    print " second argument - silence duration which reliably indicates a chapter transition, in seconds\n";
-    print " third argument - The maximum duration of a segment, in seconds\n";
-    print " next argument - A silence duration which can be used to split a long chapter\n";
+    print " -file=/path/to/file - path to file (example silence.php -file=some/file.xml);\n";
+    print " -sd=10 - silence duration which reliably indicates a chapter transition, in seconds\n";
+    print " -sp=5 - A silence duration which can be used to split a long chapter\n";
+    print " -sd=50 - The maximum duration of a segment, in seconds\n";
     print "\n\n";
-    print "Example: php silence.php ./test-source/silence1.xml 10 5 50";
+    print "Example: php silence.php -file=./test-source/silence1.xml -sc=10 -sp=5 -sd=50";
     print "\n";
+}
+
+function parseArguments($argv)
+{
+    $arguments = [
+        'file' => '',
+        'silence_chapter' => 0,
+        'silence_part' => 0,
+        'segment_duration' => 0,
+        'export_to' => '',
+    ];
+
+    unset($argv[0]); // current filename
+    foreach($argv as $arg) {
+        $arg = explode('=', $arg);
+
+        switch($arg[0]) {
+            case '-file':
+                $arguments['file'] = $arg[1] ?? '';
+                break;
+            case '-sc':
+                $arguments['silence_chapter'] = $arg[1] ?? 0;
+                break;
+            case '-sp':
+                $arguments['silence_part'] = $arg[1] ?? 0;
+                break;
+            case '-sd':
+                $arguments['segment_duration'] = $arg[1] ?? 0;
+                break;
+            case '-export':
+                $arguments['export'] = $arg[1] ?? '';
+                break;
+            default:
+                throw new \InvalidArgumentException("Unrecognized option {$arg[0]}");
+        }
+    }
+
+    return $arguments;
 }
