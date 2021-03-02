@@ -46,7 +46,6 @@ class Analyzer
         $cur_chapter = 1;
         $cur_subchapter = 0;
         $segment_duration = 0;
-        $is_split = false;
 
         // add first chapter row (from zero to first from occurrence)
         $this->addChapterRow($cur_chapter, $cur_subchapter, $metadata[0]['from']);
@@ -111,7 +110,7 @@ class Analyzer
     }
 
     /**
-     * Get silence duration between 2 intervals.
+     * Convert provided DateInterval into (int) seconds.
      *
      * @param \DateInterval $from
      * @param \DateInterval $until

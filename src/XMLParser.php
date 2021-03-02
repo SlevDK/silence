@@ -2,13 +2,11 @@
 
 namespace App;
 
-use http\Exception\InvalidArgumentException;
-
 /**
  * Class Parser
  * Load and parse incoming data.
  */
-class XMLParser
+class XMLParser implements ParserInterface
 {
     /** @var array Parsed incoming data */
     protected $metadata;
@@ -21,7 +19,7 @@ class XMLParser
      *
      * @param $path_to_file
      */
-    public function load($path_to_file): self
+    public function load(string $path_to_file): self
     {
         $path = realpath($path_to_file);
         if (! $path) {
