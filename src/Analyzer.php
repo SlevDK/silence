@@ -2,8 +2,6 @@
 
 namespace App;
 
-use http\Exception\InvalidArgumentException;
-
 class Analyzer
 {
     protected $chapter_split_sec;
