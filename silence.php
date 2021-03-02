@@ -54,6 +54,7 @@ function printHelp()
     print " -sd=10 - silence duration which reliably indicates a chapter transition, in seconds\n";
     print " -sp=5 - A silence duration which can be used to split a long chapter\n";
     print " -sd=50 - The maximum duration of a segment, in seconds\n";
+    print " -export=/path/to/file - Export processed data to the file. Print data to the console if arg does not provided\n";
     print " -format=json|array - Output format (only for console output), array by default\n";
     print "\n\n";
     print "Example: php silence.php -file=./test-source/silence1.xml -sc=10 -sp=5 -sd=50";
