@@ -12,6 +12,7 @@ class Exporter
      */
     public static function exportToTheFile(array $data, string $path_to_file)
     {
+        $data = self::wrapMetadata($data);
         $data = json_encode($data);
 
         $result = @file_put_contents($path_to_file, $data);
@@ -29,6 +30,8 @@ class Exporter
      */
     public static function exportToTheConsole(array $data, $as_array = true)
     {
+        $data = self::wrapMetadata($data);
+
         if ($as_array) {
             var_dump($data);
         } else {
@@ -36,5 +39,16 @@ class Exporter
             echo json_encode($data);
             echo "\n";
         }
+    }
+
+    /**
+     * Wrap metadata with required key ([segments => [...]]).
+     *
+     * @param array $data
+     * @return array[]
+     */
+    protected static function wrapMetadata(array $data)
+    {
+        return ['segments' => $data];
     }
 }

@@ -38,7 +38,8 @@ try {
         die(0);
     }
 
-    Exporter::exportToTheConsole($podcast, true);
+    $as_array = $arguments['format'] == 'array';
+    Exporter::exportToTheConsole($podcast, $as_array);
 
 } catch (\Exception $e) {
     echo "\n";
@@ -53,6 +54,7 @@ function printHelp()
     print " -sd=10 - silence duration which reliably indicates a chapter transition, in seconds\n";
     print " -sp=5 - A silence duration which can be used to split a long chapter\n";
     print " -sd=50 - The maximum duration of a segment, in seconds\n";
+    print " -format=json|array - Output format (only for console output), array by default\n";
     print "\n\n";
     print "Example: php silence.php -file=./test-source/silence1.xml -sc=10 -sp=5 -sd=50";
     print "\n";
@@ -66,6 +68,7 @@ function parseArguments($argv)
         'silence_part' => 0,
         'segment_duration' => 0,
         'export_to' => '',
+        'format' => 'array',
     ];
 
     unset($argv[0]); // current filename
@@ -87,6 +90,9 @@ function parseArguments($argv)
                 break;
             case '-export':
                 $arguments['export_to'] = $arg[1] ?? '';
+                break;
+            case '-format':
+                $arguments['format'] = $arg[1] == 'json' ? 'json' : 'array';
                 break;
             default:
                 throw new \InvalidArgumentException("Unrecognized option {$arg[0]}");
